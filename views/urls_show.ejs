@@ -4,11 +4,11 @@
 <body>
   <% include ./partials/_header %>
     <!-- Add your EJS code here -->
-   <% if (shortURL === "b2xVn2" ){          %>
-   <p> <%= shortURL %>: http://www.lighthouselabs.ca </p>
-   <% } else if (shortURL === "9sm5xK") {  %>
-   <p> <%= shortURL %>: http://www.google.com </p>
-   <% }                                     %>
+      <h1>ShortURL: <%= shortURL %></h1>
+      <form method="POST" action="/urls/<%= shortURL %>">
+        <input value= "<%= longURL %>" id="longURL" type="text" name="longURL" style="width: 300px">
+        <button>update</button>
+      </form>
 </body>
 </html>
 

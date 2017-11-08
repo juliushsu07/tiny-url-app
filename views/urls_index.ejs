@@ -6,13 +6,15 @@
     <!-- Add your EJS code here -->
     <ul>
       <% for(var url in urls){  %>
-      <li>  <%= url %> : <%= urls[url] %> </li>
+      <li>
+        <%= url %> : <%= urls[url] %>
+        <form method="POST" action="/urls/<%= url %>/delete">
+          <button>delete</button>
+          <a href ="/urls/<%= url %>"> Edit </a>
+        </form>
+      </li>
       <% } %>
      </ul>
-     <a href ="#">  link for shortening urls </a>
 
-     <form method="POST" action="/urls/9sm5xK/delete">
-      <button>delete</button>
-    </form>
 </body>
 </html>
