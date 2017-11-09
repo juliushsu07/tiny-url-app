@@ -1,20 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
-<head></head>
-<body>
-  <% include ./partials/_header %>
-    <!-- Add your EJS code here -->
-    <ul>
-      <% for(var url in urls){  %>
-      <li>
-        <%= url %> : <%= urls[url] %>
-        <form method="POST" action="/urls/<%= url %>/delete">
-          <button>delete</button>
-          <a href ="/urls/<%= url %>"> Edit </a>
-        </form>
-      </li>
-      <% } %>
-     </ul>
 
+<head></head>
+
+<body>
+    <% include ./partials/_header %>
+        <!-- Add your EJS code here -->
+        <ul>
+        <% for(var url in urls){  %>
+            <li>
+            <%= url %> :<%= urls[url] %>
+              <form method="POST" action="/urls/<%= url %>/delete">
+                  <button>delete</button>
+                  <a href="/urls/<%= url %>"> Edit </a>
+              </form>
+            </li>
+        <% }                       %>
+        </ul>
 </body>
+
 </html>
