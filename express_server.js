@@ -15,17 +15,21 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(cookieParser());
 
+app.set('trust proxy', 1);
+
 app.use(cookieSession({
   name: 'session',
   keys: ['key1', 'key2']
 }))
 
 app.get('/', function (req, res, next) {
+
+  req.session.id
   // Update views
-  req.session.views = (req.session.views || 0) + 1;
+  // req.session.id = (req.session.views || 0) + 1;
 
   // Write response
-  res.end(req.session.views);
+  // res.end(req.session.views);
 })
 
 // Set up session parser middleware. You can think of this as an encrypted
@@ -208,10 +212,6 @@ app.get("/login", (req, res) => {
     res.render("login", templateVars);
 });
 
-app.get("/login", (req, res) => {
-    res.render("login");
-});
-
 app.post("/login", (req, res) => {
     let idIsFound = false;
     let userId = "";
@@ -251,7 +251,7 @@ app.post("/register", (req, res) => {
         users[userId] = {
             id: userId,
             email: req.body.email,
-            password: req.body.password
+            password: bcrypt.hashSync(req.body.password, 10)
         };
         console.log(users);
         res.redirect("login");
