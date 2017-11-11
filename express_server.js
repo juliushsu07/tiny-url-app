@@ -1,15 +1,39 @@
-var express = require("express");
-var app = express();
+const express = require("express");
+const app = express();
 
-var PORT = process.env.PORT || 8080; // default port 8080
+const bodyParser = require("body-parser");
+const cookieParser = require('cookie-parser');
+const bcrypt = require("bcrypt");
+const cookieSession = require('cookie-session');
+const ejs = require('ejs');
+
+const PORT = process.env.PORT || 8080; // default port 8080
 
 app.set("view engine", "ejs");
 
-const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: true }));
 
-const cookieParser = require('cookie-parser');
 app.use(cookieParser());
+
+app.use(cookieSession({
+  name: 'session',
+  keys: ['key1', 'key2']
+}))
+
+app.get('/', function (req, res, next) {
+  // Update views
+  req.session.views = (req.session.views || 0) + 1;
+
+  // Write response
+  res.end(req.session.views);
+})
+
+// Set up session parser middleware. You can think of this as an encrypted
+// cookie store, but it does way more than that. You can save session data on a
+// database for example. In this current setup, session data will be lost once
+// the server is shut down. For more details, see:
+// https://www.npmjs.com/package/express-session
+
 
 var generateRandomString = function() {
     var text = "";
@@ -48,12 +72,12 @@ const users = {
     "u01": {
         id: "u01",
         email: "u01@example.com",
-        password: "abc-01"
+        password: bcrypt.hashSync("abc-01",10)
     },
     "u02": {
         id: "u02",
         email: "u02@example.com",
-        password: "abc-02"
+        password: bcrypt.hashSync("abc-02",10)
     }
 }
 
@@ -179,7 +203,8 @@ app.post("/urls/:id/delete", (req, res) => {
 
 app.get("/login", (req, res) => {
     let templateVars = {
-        user: users[req.cookies["user_id"]]
+        user: users["user_id"]
+        // user: users[req.session.id]
     }
     res.render("login", templateVars);
 });
@@ -192,7 +217,7 @@ app.post("/login", (req, res) => {
     let idIsFound = false;
     let userId = "";
     for (let id in users) {
-        if (req.body.email === users[id].email && req.body.password === users[id].password) {
+        if (req.body.email === users[id].email && bcrypt.compareSync(req.body.password, users[id].password)) {
             userId = users[id].id;
             idIsFound = true;
         }
