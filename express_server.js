@@ -204,7 +204,6 @@ app.post("/urls/:id/delete", (req, res) => {
 app.get("/login", (req, res) => {
     let templateVars = {
         user: users["user_id"]
-        // user: users[req.session.id]
     }
     res.render("login", templateVars);
 });
