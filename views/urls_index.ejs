@@ -9,7 +9,7 @@
         <ul>
         <% for(var url in urls){  %>
             <li>
-            <%= url %> :<%= urls[url] %>
+            <%= url %> : <%= urls[url].longURL %>
               <form method="POST" action="/urls/<%= url %>/delete">
                   <button>delete</button>
                   <a href="/urls/<%= url %>"> Edit </a>

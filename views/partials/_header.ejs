@@ -1,14 +1,16 @@
+<title>TinyApp</title>
 
-<% if(!username){ %>
-<title>
-    TinyApp</title>
-<form method="POST" action="/login">
-    <input name="username" type="text" placeholder="username">
-    <button>Log In</button>
+<% if (user) {  %>
+  <%= user.id   %>
+<form method="POST" action="/logout">
+    <button type="submit">Log Out</button>
 </form>
 <% } else {     %>
-    <form method="POST" action="/logout">
-        <h2><%= username %></h2>
-        <button type="submit">Log Out</button>
-    </form>
-<% }             %>
+<form method="POST" action="/login">
+    <input name="email" type="email">
+    <input name="password" type="password">
+    <button type="submit">Log In</button>
+</form>
+<% }            %>
+
+<a href="/register">Register</a>
