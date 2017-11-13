@@ -22,15 +22,6 @@ app.use(cookieSession({
   keys: ['key1', 'key2']
 }))
 
-app.get('/', function (req, res, next) {
-
-  req.session.id
-  // Update views
-  // req.session.id = (req.session.views || 0) + 1;
-
-  // Write response
-  // res.end(req.session.views);
-})
 
 // Set up session parser middleware. You can think of this as an encrypted
 // cookie store, but it does way more than that. You can save session data on a
@@ -99,11 +90,11 @@ app.get("/hello", (req, res) => {
 
 app.get("/urls", (req, res) => {
 
-    let ownedURL = urlsForUser(req.cookies["user_id"]);
+    let ownedURL = urlsForUser(req.session.user_id);
 
     let templateVars = {
         urls: ownedURL,
-        user: users[req.cookies["user_id"]]
+        user: users[req.session.user_id]
     };
 
     let isLoggedIn = false;
@@ -119,7 +110,7 @@ app.get("/urls", (req, res) => {
 app.get("/urls/new", (req, res) => {
     let templateVars = {
         urls: urlDatabase,
-        user: users[req.cookies["user_id"]]
+        user: users[req.session.user_id]
     };
     let isLoggedIn = false;
     if (templateVars.user) {
@@ -135,7 +126,7 @@ app.get("/urls/new", (req, res) => {
 app.post("/urls", (req, res) => {
     let shortURL = generateRandomString();
     urlDatabase[shortURL] = {
-        userId: users[req.cookies["user_id"]],
+        userId: users[req.session.user_id],
         shortURL: shortURL,
         longURL: req.body.longURL
     }
@@ -157,11 +148,11 @@ app.get("/u/:shortURL", (req, res) => {
 });
 
 app.get("/urls/:id", (req, res) => {
-    let ownedURL = urlsForUser(req.cookies["user_id"]);
+    let ownedURL = urlsForUser(req.session.user_id);
 
     let templateVars = {
         urls: ownedURL,
-        user: users[req.cookies["user_id"]]
+        user: users[req.session.user_id]
     };
 
     let isLoggedIn = false;
@@ -175,12 +166,12 @@ app.get("/urls/:id", (req, res) => {
 
 app.post("/urls/:id", (req, res) => {
     let urlBelongsToUser = false;
-    if(req.cookies["user_id"] === urlDatabase[req.params.id].userId){
+    if(req.session.user_id === urlDatabase[req.params.id].userId){
         urlBelongsToUser = true;
     }
     if(urlBelongsToUser === true ){
         urlDatabase[req.params.id] = {
-            userId: users[req.cookies["user_id"]],
+            userId: users[req.session.user_id],
             shortURL: req.params.id,
             longURL: req.body.longURL
         }
@@ -194,7 +185,7 @@ app.post("/urls/:id", (req, res) => {
 
 app.post("/urls/:id/delete", (req, res) => {
     let urlBelongsToUser = false;
-    if(req.cookies["user_id"] === urlDatabase[req.params.id].userId){
+    if(req.session.user_id === urlDatabase[req.params.id].userId){
         urlBelongsToUser = true;
     }
     if(urlBelongsToUser === true ){
@@ -207,7 +198,7 @@ app.post("/urls/:id/delete", (req, res) => {
 
 app.get("/login", (req, res) => {
     let templateVars = {
-        user: users["user_id"]
+        user: users[req.session.user_id]
     }
     res.render("login", templateVars);
 });
@@ -222,7 +213,8 @@ app.post("/login", (req, res) => {
         }
     }
     if (idIsFound) {
-        res.cookie("user_id", userId);
+        req.session.user_id = userId;
+        // res.cookie("user_id", userId);
         res.redirect("/urls");
     } else {
         res.status(400).send("Wrong e-mail and password combination!!");
@@ -230,7 +222,7 @@ app.post("/login", (req, res) => {
 });
 
 app.post("/logout", (req, res) => {
-    res.clearCookie("user_id");
+    req.session.user_id = null;
     res.redirect("login");
 });
 
