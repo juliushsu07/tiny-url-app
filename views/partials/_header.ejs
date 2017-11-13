@@ -1,7 +1,7 @@
 <title>TinyApp</title>
 
 <% if (user) {  %>
-  <%= user.id   %>
+  <%= user.email   %>
 <form method="POST" action="/logout">
     <button type="submit">Log Out</button>
 </form>
@@ -11,6 +11,7 @@
     <input name="password" type="password">
     <button type="submit">Log In</button>
 </form>
+<a href="/register">Register</a>
 <% }            %>
 
-<a href="/register">Register</a>
+

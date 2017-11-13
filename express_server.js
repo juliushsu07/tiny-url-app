@@ -118,18 +118,17 @@ app.get("/urls/new", (req, res) => {
         res.render("urls_new", templateVars);
     } else{
      res.redirect("/login");
-
     }
-
 });
 
 app.post("/urls", (req, res) => {
     let shortURL = generateRandomString();
     urlDatabase[shortURL] = {
-        userId: users[req.session.user_id],
+        userId: req.session.user_id,
         shortURL: shortURL,
         longURL: req.body.longURL
     }
+    console.log(urlDatabase);
     res.redirect("/urls");
 });
 
@@ -151,6 +150,7 @@ app.get("/urls/:id", (req, res) => {
     let ownedURL = urlsForUser(req.session.user_id);
 
     let templateVars = {
+        matchURL: req.params.id,
         urls: ownedURL,
         user: users[req.session.user_id]
     };
@@ -171,7 +171,7 @@ app.post("/urls/:id", (req, res) => {
     }
     if(urlBelongsToUser === true ){
         urlDatabase[req.params.id] = {
-            userId: users[req.session.user_id],
+            userId: req.session.user_id,
             shortURL: req.params.id,
             longURL: req.body.longURL
         }
@@ -231,24 +231,29 @@ app.get("/register", (req, res) => {
 });
 
 app.post("/register", (req, res) => {
-    let emailIsFound = false;
-    for (let userIndex in users) {
-        if (users[userIndex].email === req.body.email) {
-            emailIsFound = true;
-        }
+    if(req.body.email === "" && req.body.password === ""){
+        res.status(400).send("Email and password cannot be empty!!")
     }
-    if (!emailIsFound) {
-        let userId = generateRandomString();
-        console.log(userId);
-        users[userId] = {
-            id: userId,
-            email: req.body.email,
-            password: bcrypt.hashSync(req.body.password, 10)
-        };
-        console.log(users);
-        res.redirect("login");
-    } else {
-        res.status(400).send('Email already exists!!');
+    else {
+        let emailIsFound = false;
+        for (let userIndex in users) {
+            if (users[userIndex].email === req.body.email) {
+                emailIsFound = true;
+            }
+        }
+        if (!emailIsFound) {
+            let userId = generateRandomString();
+            console.log(userId);
+            users[userId] = {
+                id: userId,
+                email: req.body.email,
+                password: bcrypt.hashSync(req.body.password, 10)
+            };
+            console.log(users);
+            res.redirect("login");
+        } else {
+            res.status(400).send('Email already exists!!');
+        }
     }
 });
 

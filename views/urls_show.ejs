@@ -7,13 +7,16 @@
     <% include ./partials/_header %>
         <!-- Add your EJS code here -->
 
-    <% for(var url in urls){                %>
+    <% for(var url in urls){                    %>
+    <%  if( urls[url].shortURL === matchURL){   %>
+
             <h1>ShortURL: <%= urls[url].shortURL %></h1>
             <form method="POST" action="/urls/<%= urls[url].shortURL %>">
                 <input value="<%= urls[url].longURL %>" id="longURL" type="text" name="longURL" style="width: 300px">
                 <button>update</button>
             </form>
-    <% }                                    %>
+    <%  }                                       %>
+    <% }                                        %>
 
 
 
