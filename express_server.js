@@ -227,7 +227,12 @@ app.post("/logout", (req, res) => {
 });
 
 app.get("/register", (req, res) => {
-    res.render("register");
+    if(req.session.user_id){
+        res.redirect("/urls");
+    }
+    else{
+        res.render("register");
+    }
 });
 
 app.post("/register", (req, res) => {
