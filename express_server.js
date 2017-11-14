@@ -126,7 +126,6 @@ app.post("/urls", (req, res) => {
         shortURL: shortURL,
         longURL: req.body.longURL
     }
-    console.log(urlDatabase); //check database after new link is created
     res.redirect(`/urls/${shortURL}`);
 });
 
@@ -195,7 +194,6 @@ app.post("/urls/:id/delete", (req, res) => {
 });
 
 app.get("/login", (req, res) => {
-    console.log("/login")
     let templateVars = {
         user: users[req.session.user_id]
     }
@@ -222,13 +220,11 @@ app.post("/login", (req, res) => {
 });
 
 app.post("/logout", (req, res) => {
-    console.log("POST /logout")
     req.session.user_id = null;
     res.redirect("login");
 });
 
 app.get("/register", (req, res) => {
-    console.log("/register")
 
     if (req.session.user_id) {
         res.redirect("/urls");
@@ -250,13 +246,11 @@ app.post("/register", (req, res) => {
 
         if (!emailIsFound) {
             let userId = generateRandomString();
-            console.log(userId);
             users[userId] = {
                 id: userId,
                 email: req.body.email,
                 password: bcrypt.hashSync(req.body.password, 10)
             };
-            console.log(users);
             res.redirect("login");
         } else {
             res.status(400).send('Email already exists!!');
