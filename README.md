@@ -18,11 +18,11 @@ node express_server.js
 ```
 
 ### Dependencies
-*Node.js
-*Express
-*EJS
-*bcrypt
-*body-parser
-*cookie-session
+* Node.js
+* Express
+* EJS
+* bcrypt
+* body-parser
+* cookie-session
 
 
