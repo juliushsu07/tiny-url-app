@@ -9,9 +9,13 @@ TinyApp is a full stack web application built with Node and Express that allows 
 
 ### Usage
 Clone this repository and install all dependencies.
-```npm install``` 
-Run the development web server in CLI
-```node express_server.js```
+```
+npm install
+``` 
+Run the development web server.
+```
+node express_server.js
+```
 
 ### Dependencies
 *Node.js
